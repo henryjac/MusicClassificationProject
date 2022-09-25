@@ -15,7 +15,7 @@ def get_data(numpy = True):
     # Find the indices where we had clearly faulty values
     energy_err = inputs.idxmax()['energy']
     loudness_err = inputs.idxmin()['loudness']
-    inputs.drop([energy_err, loudness_err])
+    inputs = inputs.drop([energy_err, loudness_err])
 
     if numpy:
         return data, inputs.to_numpy()
@@ -38,8 +38,8 @@ def correlation_plot():
 def plot_all_features():
     data, inputs = get_data()
 
-    for i in range(np.shape(inputs)[1]-1):
-        for j in range(np.shape(inputs)[1]-1):
+    for i in range(np.shape(inputs)[1]):
+        for j in range(np.shape(inputs)[1]):
             if i == j:
                 continue
             feature_plot(inputs, i, j, data.keys()[i], data.keys()[j])
@@ -57,7 +57,7 @@ def feature_plot(inputs, f1, f2, namef1, namef2):
     plt.ylabel(namef2)
 
     plt.tight_layout()
-    plt.savefig(f'img/{f1}_vs_{f2}.svg')
+    plt.savefig(f'img/feature_vs_feature/{f1}_vs_{f2}.svg')
     plt.close()
 
 if __name__ == '__main__':
