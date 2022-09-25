@@ -1,17 +1,42 @@
 import pandas as pd
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
 def main():
+    # plot_all_features()
+    correlation_plot()
+
+def get_data(numpy = True):
     data = pd.read_csv('data/project_train.csv', encoding='utf-8')
-    inputs = pd.DataFrame(data).to_numpy()
+    inputs = pd.DataFrame(data)
 
-    energy_err  = np.argmax(inputs[:,1])
-    inputs = np.delete(inputs,energy_err,0)
+    # Find the indices where we had clearly faulty values
+    energy_err = inputs.idxmax()['energy']
+    loudness_err = inputs.idxmin()['loudness']
+    inputs.drop([energy_err, loudness_err])
 
-    loudness_err = np.argmin(inputs[:,3])
-    inputs = np.delete(inputs,loudness_err,0)
+    if numpy:
+        return data, inputs.to_numpy()
+    return data, inputs
+
+def correlation_plot():
+    _, inputs = get_data(False)
+
+    corr = inputs.corr()
+    mask = np.triu(np.ones_like(corr, dtype=bool))
+    sns.set_style(style = 'white')
+    f, ax = plt.subplots(figsize=(11, 9))
+    cmap = sns.diverging_palette(10, 250, as_cmap=True)
+    sns.heatmap(corr, mask=mask, cmap=cmap,
+                        square=True,
+                        linewidths=.5, cbar_kws={"shrink": .5}, ax=ax)
+    plt.title('Correlation between features')
+    plt.savefig('img/correlation.svg')
+
+def plot_all_features():
+    data, inputs = get_data()
 
     for i in range(np.shape(inputs)[1]-1):
         for j in range(np.shape(inputs)[1]-1):
