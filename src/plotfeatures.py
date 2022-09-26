@@ -16,23 +16,22 @@ def main():
     correlation_plot()
     feature_importance()
 
-def get_data(numpy = True):
+def get_data():
     data = pd.read_csv('data/project_train.csv', encoding='utf-8')
-    inputs = pd.DataFrame(data)
 
     # Find the indices where we had clearly faulty values
-    energy_err = inputs.idxmax()['energy']
-    loudness_err = inputs.idxmin()['loudness']
-    inputs = inputs.drop([energy_err, loudness_err])
+    energy_err = data.idxmax()['energy']
+    loudness_err = data.idxmin()['loudness']
+    data = data.drop([energy_err, loudness_err])
 
-    if numpy:
-        return data, inputs.to_numpy()
-    return data, inputs
+    return data
 
 def correlation_plot():
-    _, inputs = get_data(False)
+    data = get_data()
 
-    corr = inputs.corr()
+    data_np = data.to_numpy()
+
+    corr = data.corr()
     mask = np.triu(np.ones_like(corr, dtype=bool))
     sns.set_style(style = 'white')
     f, ax = plt.subplots(figsize=(11, 9))
@@ -44,20 +43,21 @@ def correlation_plot():
     plt.savefig('img/correlation.svg')
 
 def plot_all_features():
-    data, inputs = get_data()
+    data = get_data()
+    data_np = data.to_numpy()
 
-    for i in range(np.shape(inputs)[1]):
-        for j in range(np.shape(inputs)[1]):
+    for i in range(np.shape(data)[1]):
+        for j in range(np.shape(data)[1]):
             if i == j:
                 continue
-            feature_plot(inputs, i, j, data.keys()[i], data.keys()[j])
+            feature_plot(data_np, i, j, data.keys()[i], data.keys()[j])
 
-def feature_plot(inputs, f1, f2, namef1, namef2):
+def feature_plot(data, f1, f2, namef1, namef2):
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
     cmap, nmap = clr.from_levels_and_colors([0,0.5,1],['blue','red'])
-    plt.scatter(inputs[:,f1],inputs[:,f2], c=inputs[:,-1], cmap=cmap)
+    plt.scatter(data[:,f1],data[:,f2], c=data[:,-1], cmap=cmap)
     ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
     ax.set_xticklabels([])
     ax.set_yticklabels([])
@@ -69,9 +69,9 @@ def feature_plot(inputs, f1, f2, namef1, namef2):
     plt.close()
 
 def feature_importance():
-    data, inputs = get_data(False)
+    data = get_data()
     X_train, X_test, y_train, y_test = train_test_split(
-        inputs.iloc[:, :-1], inputs.iloc[:, -1], test_size=0.3
+        data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
     )
     model = RandomForestClassifier(n_estimators=500, n_jobs=-1)
     model.fit(X_train, y_train)
@@ -79,6 +79,10 @@ def feature_importance():
     features = data.drop('Label', axis=1).columns
     importances = model.feature_importances_
     indices = np.argsort(importances)
+    print(importances)
+    print(features)
+    print(indices)
+    print(importances[indices[-4:]])
 
     plt.figure(figsize=(30,15))
     plt.title('Feature importances', fontsize=30)

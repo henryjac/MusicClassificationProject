@@ -42,56 +42,78 @@ def preprocessing():
 
     return data
 
+def best_features_from_RFC(data, n_best=4):
+    """
+    Returns a DataFrame with the `n_best` number of best features
+    gathered from RandomForestClassifier model.
+    """
+    X_train, X_test, y_train, y_test = train_test_split(
+        data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
+    )
+    model = RandomForestClassifier(n_estimators=500, n_jobs=-1)
+    model.fit(X_train, y_train)
+
+    features = data.drop('Label', axis=1).columns
+    importances = model.feature_importances_
+    indices = np.argsort(importances)
+
+    return data.drop(features[indices[:-4]], axis=1)
+
 def test_accuracy():
     # ------------------- IMPORT DATA ----------------
     # Import data
+    svc_accs = np.array([])
+    knn_accs = np.array([])
+    lda_accs = np.array([])
+    qda_accs = np.array([])
     rfc_accs = np.array([])
     data = preprocessing()
-    for i in range(100):
-        # data = pd.read_csv (r'data/project_train.csv', encoding='utf-8')
+    for i in range(1):
         # Split data
+        data = best_features_from_RFC(data)
         X_train, X_test, y_train, y_test = train_test_split(
             data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
         )
 
-        # acc = models.get_accuracy(
-        #     X_train, X_test, y_train, y_test,
-        #     SVC, C=1, kernel='linear'
-        # )
-        # print('Accuracy with SVM')
-        # print(acc)
 
-        # acc = models.get_accuracy(
-        #     X_train, X_test, y_train, y_test,
-        #     KNeighborsClassifier, n_neighbors=10, weights='distance', algorithm='auto'
-        # )
-        # print('Accuracy with KNN')
-        # print(acc)
+        acc = models.get_accuracy(
+            X_train, X_test, y_train, y_test,
+            SVC, C=1, kernel='linear'
+        )
+        svc_accs = np.append(rfc_accs, acc)
 
-        # acc = models.get_accuracy(
-        #     X_train, X_test, y_train, y_test,
-        #     LinearDiscriminantAnalysis
-        # )
-        # print('Accuracy with LDA')
-        # print(acc)
+        acc = models.get_accuracy(
+            X_train, X_test, y_train, y_test,
+            KNeighborsClassifier, n_neighbors=10, weights='distance', algorithm='auto'
+        )
+        knn_accs = np.append(rfc_accs, acc)
 
-        # acc = models.get_accuracy(
-        #     X_train, X_test, y_train, y_test,
-        #     QuadraticDiscriminantAnalysis, reg_param=0.01
-        # )
-        # print('Accuracy with QDA')
-        # print(acc)
+        acc = models.get_accuracy(
+            X_train, X_test, y_train, y_test,
+            LinearDiscriminantAnalysis
+        )
+        lda_accs = np.append(rfc_accs, acc)
+
+        acc = models.get_accuracy(
+            X_train, X_test, y_train, y_test,
+            QuadraticDiscriminantAnalysis, reg_param=0.01
+        )
+        qda_accs = np.append(rfc_accs, acc)
 
         acc = models.get_accuracy(
             X_train, X_test, y_train, y_test,
             RandomForestClassifier, criterion='entropy', n_estimators=200, max_features='sqrt'
         )
-        # print('Accuracy with rfc')
-        # print(acc)
         rfc_accs = np.append(rfc_accs, acc)
-    avg_acc = rfc_accs.sum()/rfc_accs.size
-    max_acc = rfc_accs.max()
-    print(f'Average accuracy: {avg_acc}\nMax accuracy: {max_acc}')
+    avg_acc_rfc = rfc_accs.sum()/rfc_accs.size
+    max_acc_rfc = rfc_accs.max()
+    accuracies = [svc_accs, knn_accs, lda_accs, qda_accs, rfc_accs]
+    accuracies_name = ['SVC','KNN','LDA','QDA','RFC']
+    for accs,name in zip(accuracies,accuracies_name):
+        avg_acc = accs.sum()/accs.size
+        max_acc = accs.max()
+        print(f'{name}:')
+        print(f'Average accuracy: {avg_acc}\nMax accuracy: {max_acc}')
 
 def main():
     test_accuracy()
