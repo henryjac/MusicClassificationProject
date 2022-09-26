@@ -13,7 +13,7 @@ import preprocessing
 
 def main():
     # plot_all_features()
-    # correlation_plot()
+    correlation_plot()
     feature_importance()
 
 def get_data(numpy = True):
@@ -40,7 +40,7 @@ def correlation_plot():
     sns.heatmap(corr, mask=mask, cmap=cmap,
                         square=True,
                         linewidths=.5, cbar_kws={"shrink": .5}, ax=ax)
-    plt.title('Correlation between features')
+    plt.title('Correlation between features', fontsize=20)
     plt.savefig('img/correlation.svg')
 
 def plot_all_features():
