@@ -4,9 +4,17 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.colors as clr
 
+from sklearn.model_selection import KFold, train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+import sys
+sys.path.append('src')
+import preprocessing
+
 def main():
     # plot_all_features()
-    correlation_plot()
+    # correlation_plot()
+    feature_importance()
 
 def get_data(numpy = True):
     data = pd.read_csv('data/project_train.csv', encoding='utf-8')
@@ -59,6 +67,25 @@ def feature_plot(inputs, f1, f2, namef1, namef2):
     plt.tight_layout()
     plt.savefig(f'img/feature_vs_feature/{f1}_vs_{f2}.svg')
     plt.close()
+
+def feature_importance():
+    data, inputs = get_data(False)
+    X_train, X_test, y_train, y_test = train_test_split(
+        inputs.iloc[:, :-1], inputs.iloc[:, -1], test_size=0.3
+    )
+    model = RandomForestClassifier(n_estimators=500, n_jobs=-1)
+    model.fit(X_train, y_train)
+
+    features = data.drop('Label', axis=1).columns
+    importances = model.feature_importances_
+    indices = np.argsort(importances)
+
+    plt.figure(figsize=(30,15))
+    plt.title('Feature importances', fontsize=30)
+    plt.bar([features[i] for i in indices], importances[indices], color='b', align='center')
+    plt.xticks(range(len(indices)), [features[i] for i in indices], fontsize=20)
+    plt.ylabel('Relative Importance', fontsize=24)
+    plt.savefig('img/feature_importances.svg')
 
 if __name__ == '__main__':
     main()
