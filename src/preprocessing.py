@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import statistics as s
 import numpy as np
 from numpy import genfromtxt
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
 
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC # Supprort Vector classifier
@@ -20,18 +20,12 @@ import models
 
 def main():
     # ------------------- IMPORT DATA ----------------
-    data = pd.read_csv (r'data/project_train.csv', encoding='utf-8') # Import data
-    inputs = pd.DataFrame(data).to_numpy()
-    print('size of data input')
-    print(np.shape(inputs))
-    np.random.shuffle(inputs)
-    # -----------------  TRAINING DATA ---------------------------------
-    X_train = inputs[0:374,0:11] # training data (without the labels)
-    y_train = inputs[0:374,11] # training data (only labels)
-    # ----------------- EVALUATION DATA ---------------------------------
-    X_test = inputs[375:,0:11] # Using last 25% of data to evaluate how good the classifier is.
-    y_test = inputs[375:,11] # correct labels on the evaluation data.
-    print('-----')
+    # Import data
+    data = pd.read_csv (r'data/project_train.csv', encoding='utf-8')
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(
+        data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
+    )
 
     acc = models.get_accuracy(
         X_train, X_test, y_train, y_test,
