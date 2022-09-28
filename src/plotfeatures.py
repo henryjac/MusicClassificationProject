@@ -28,8 +28,7 @@ def get_data():
 
 def correlation_plot():
     data = get_data()
-
-    data_np = data.to_numpy()
+    data = preprocessing.normalize(data)
 
     corr = data.corr()
     mask = np.triu(np.ones_like(corr, dtype=bool))
@@ -70,6 +69,8 @@ def feature_plot(data, f1, f2, namef1, namef2):
 
 def feature_importance():
     data = get_data()
+    data = preprocessing.normalize(data)
+
     X_train, X_test, y_train, y_test = train_test_split(
         data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
     )
@@ -79,10 +80,6 @@ def feature_importance():
     features = data.drop('Label', axis=1).columns
     importances = model.feature_importances_
     indices = np.argsort(importances)
-    print(importances)
-    print(features)
-    print(indices)
-    print(importances[indices[-4:]])
 
     plt.figure(figsize=(30,15))
     plt.title('Feature importances', fontsize=30)

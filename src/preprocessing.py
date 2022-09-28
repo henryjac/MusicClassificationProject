@@ -1,13 +1,14 @@
-import pandas as pd
 import random
-from scipy.optimize import minimize
-import matplotlib.pyplot as plt
+import sklearn
+
+import pandas as pd
 import statistics as s
 import numpy as np
-from numpy import genfromtxt
-from sklearn.model_selection import KFold, train_test_split
-
 import matplotlib.pyplot as plt
+
+from numpy import genfromtxt
+from scipy.optimize import minimize
+from sklearn.model_selection import KFold, train_test_split
 from sklearn.svm import SVC # Supprort Vector classifier
 from sklearn.neighbors import KNeighborsClassifier # KNN
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -40,7 +41,12 @@ def preprocessing():
     # 'acousticness'
     data = data.drop(['danceability','valence','instrumentalness'], axis=1)
 
+    data = normalize(data, NormType.MEAN) # Use deviation of mean to normalize
+
     return data
+
+def normalize(dataframe):
+    return (dataframe - dataframe.min()) / (dataframe.max() - dataframe.min())
 
 def best_features_from_RFC(data, n_best=4):
     """
@@ -74,7 +80,6 @@ def test_accuracy():
         X_train, X_test, y_train, y_test = train_test_split(
             data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
         )
-
 
         acc = models.get_accuracy(
             X_train, X_test, y_train, y_test,
