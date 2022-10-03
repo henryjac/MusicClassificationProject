@@ -19,7 +19,7 @@ import sys
 sys.path.append('src')
 import models
 
-def preprocessing():
+def preprocessing(X_test=None):
     """
     Preprocesses the project_train.csv file by removing irrelevant columns
     and rows.
@@ -40,9 +40,13 @@ def preprocessing():
     # Also drop column 'instrumentalness' as it's highyl correlated with
     # 'acousticness'
     data = data.drop(['danceability','valence','instrumentalness'], axis=1)
+    if X_test is not None:
+        X_test = X_test.drop(['danceability','valence','instrumentalness'], axis=1)
 
-    data = normalize(data, NormType.MEAN) # Use deviation of mean to normalize
+    data = normalize(data) # Use deviation of mean to normalize
 
+    if X_test is not None:
+        return data, X_test
     return data
 
 def normalize(dataframe):
