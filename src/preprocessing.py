@@ -32,18 +32,19 @@ def preprocessing(X_test=None):
     # Remove rows with faulty values, which
     # we found in the labels 'energy' and 'loudness'
     energy_idx_err = data.idxmax()['energy']
-    loudness_idx_err = data.idxmax()['loudness']
+    loudness_idx_err = data.idxmin()['loudness']
     data = data.drop([energy_idx_err, loudness_idx_err], axis=0)
 
     # Drop columns 'danceability', 'valence'
     # as their correlation with the Label is low
     # Also drop column 'instrumentalness' as it's highyl correlated with
     # 'acousticness'
-    data = data.drop(['danceability','valence','instrumentalness'], axis=1)
+    to_drop = ['mode','key','liveness']
+    data = data.drop(to_drop, axis=1)
     if X_test is not None:
-        X_test = X_test.drop(['danceability','valence','instrumentalness'], axis=1)
+        X_test = X_test.drop(to_drop, axis=1)
 
-    data = normalize(data) # Use deviation of mean to normalize
+    # data = normalize(data) # Use deviation of mean to normalize
 
     if X_test is not None:
         return data, X_test
@@ -77,17 +78,22 @@ def test_accuracy():
     lda_accs = np.array([])
     qda_accs = np.array([])
     rfc_accs = np.array([])
-    data = preprocessing()
-    for i in range(1):
+    # data = preprocessing()
+    train_file = 'data/project_train.csv'
+    data = pd.read_csv(train_file, encoding='utf-8')
+    for i in range(10):
         # Split data
-        data = best_features_from_RFC(data)
+        # data = best_features_from_RFC(data)
         X_train, X_test, y_train, y_test = train_test_split(
             data.iloc[:, :-1], data.iloc[:, -1], test_size=0.3
         )
+        to_drop = ['key','mode']
+        X_train = X_train.drop(to_drop, axis=1)
+        X_test = X_test.drop(to_drop, axis=1)
 
         acc = models.get_accuracy(
             X_train, X_test, y_train, y_test,
-            SVC, C=1, kernel='linear'
+            SVC, C=0.2, kernel='rbf'
         )
         svc_accs = np.append(rfc_accs, acc)
 
