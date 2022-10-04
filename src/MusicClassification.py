@@ -25,7 +25,11 @@ def main():
         'knn_n10':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':10,'weights':'distance','algorithm':'auto'}},
         'knn_n15':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':15,'weights':'distance','algorithm':'auto'}},
         'knn_n5':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':5,'weights':'distance','algorithm':'auto'}},
+        'lda':{'sk_name':LinearDiscriminantAnalysis,'kwargs':{}},
+        'qda':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":0.01}},
+        'rfc':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':200,'max_features':'sqrt'}},
     }
+
     for model,info in models_2_test.items():
         print(model)
         y_test = models.ML_model_prediction(
