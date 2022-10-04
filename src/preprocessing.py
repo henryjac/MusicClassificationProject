@@ -15,7 +15,7 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.ensemble import RandomForestClassifier
 
-import sys
+import sys,os
 sys.path.append('src')
 import models
 
@@ -128,8 +128,23 @@ def test_accuracy():
         print(f'{name}:')
         print(f'Average accuracy: {avg_acc}\nMax accuracy: {max_acc}')
 
+def select_most_common_label():
+    dfs = pd.DataFrame()
+    nr_of_label_files =  0
+    for fl in os.listdir('labels'):
+        if 'csv' not in fl:
+            continue
+        nr_of_label_files += 1
+        df = pd.read_csv(f'labels/{fl}', encoding='utf-8', header=None)
+        dfs = pd.concat([dfs, df])
+    df_sum = dfs.sum().transpose()
+    df_sum[df_sum <= nr_of_label_files/2] = 0
+    df_sum[df_sum > nr_of_label_files/2] = 1
+    df_sum.to_numpy().tofile('labels/average_labels.csv',sep=',')
+
 def main():
-    test_accuracy()
+    # test_accuracy()
+    select_most_common_label()
 
 if __name__ == '__main__':
     main()

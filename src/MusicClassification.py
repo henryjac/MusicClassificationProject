@@ -40,7 +40,7 @@ def main():
         y_test = np.array(y_test)
 
         # Save the labels to a file
-        y_test.tofile(f'labels/{model}_labels.csv',sep='\n')
+        y_test.tofile(f'labels/{model}_labels.csv',sep=',')
 
 if __name__ == '__main__':
     main()
