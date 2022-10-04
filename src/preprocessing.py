@@ -41,12 +41,10 @@ def preprocessing(X_test=None):
     # 'acousticness'
     to_drop = ['mode','key','liveness']
     data = data.drop(to_drop, axis=1)
+    data = normalize(data) # Use deviation of mean to normalize
     if X_test is not None:
         X_test = X_test.drop(to_drop, axis=1)
-
-    # data = normalize(data) # Use deviation of mean to normalize
-
-    if X_test is not None:
+        X_test = normalize(X_test)
         return data, X_test
     return data
 
