@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+
+from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC # Supprort Vector classifier
 from sklearn.neighbors import KNeighborsClassifier # KNN
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
@@ -30,17 +32,37 @@ def main():
         'rfc':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':200,'max_features':'sqrt'}},
     }
 
-    for model,info in models_2_test.items():
-        print(model)
-        y_test = models.ML_model_prediction(
-            X_train, X_test, y_train,
-            info['sk_name'], **info['kwargs']
-        )
-        y_test = [int(x) for x in y_test]
-        y_test = np.array(y_test)
+    with open('labels/accuracies_latest', 'w') as f:
+        f.write('model,mean,standard deviation\n')
+        for model,info in models_2_test.items():
+            print(model)
+            y_test = models.ML_model_prediction(
+                X_train, X_test, y_train,
+                info['sk_name'], **info['kwargs']
+            )
+            y_test = [int(x) for x in y_test]
+            y_test = np.array(y_test)
 
-        # Save the labels to a file
-        y_test.tofile(f'labels/{model}_labels.csv',sep=',')
+            # Save the labels to a file
+            y_test.tofile(f'labels/{model}_labels.csv',sep=',')
+
+            # Test the accuracy so we can choose the one with best accuracy
+            acc = np.array([])
+            for i in range(100):
+                X_train_acc_test, X_test_acc_test, y_train_acc_test, y_test_acc_test = train_test_split(
+                    X_train, y_train, test_size=0.3
+                )
+                acc = np.append(
+                    acc,
+                    models.get_accuracy(
+                        X_train_acc_test, X_test_acc_test, y_train_acc_test, y_test_acc_test,
+                        info['sk_name'], **info['kwargs']
+                    )
+                )
+            avg_acc = acc.mean()
+            std_acc = acc.std()
+            # f.write(f'{model} average accuracy:\n\t{avg_acc}\n')
+            f.write(f'{model},{avg_acc},{std_acc}\n')
 
 if __name__ == '__main__':
     main()
