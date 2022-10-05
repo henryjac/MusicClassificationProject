@@ -25,7 +25,7 @@ def preprocessing(X_test=None, to_drop=None, use_percentage=1):
     and rows.
 
     :param X_test: Remove same columns of the test data as training data
-    :param to_drop: List of column names to drop. default=None
+    :param to_drop: List of column names/indices to drop. default=None
     :param use_percentage: The fractional part of the dataframe to use. defualt=1
     :return: The DataFrame object
     """
@@ -47,7 +47,10 @@ def preprocessing(X_test=None, to_drop=None, use_percentage=1):
     # Also drop column 'instrumentalness' as it's highly correlated with
     # 'acousticness'
     if to_drop is None:
+        # If to_drop is specified with indices, convert them to feature names
         to_drop = ['mode','key','liveness']
+    elif isinstance(to_drop[0],int):
+        to_drop = data.columns[to_drop]
     data = data.drop(to_drop, axis=1)
     data = normalize(data) # Use deviation of mean to normalize
     if X_test is not None:
