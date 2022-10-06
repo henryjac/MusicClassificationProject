@@ -78,5 +78,15 @@ def main():
             # f.write(f'{model} average accuracy:\n\t{avg_acc}\n')
             f.write(f'{model},{avg_acc},{std_acc}\n')
 
+def test_cross_validation(k=5):
+    to_drop = ['key', 'mode']
+    processed_data = preprocessing.preprocessing(to_drop=to_drop)
+    X_train = np.array(processed_data.drop('Label', axis=1))
+    y_train = np.array(processed_data['Label'])
+
+    accuracy = models.cross_validate(X_train, y_train, k, SVC, C=0.2, kernel='rbf')
+    print(f"Tested cross validation with k={k}: {accuracy}")
+            
 if __name__ == '__main__':
+    #test_cross_validation()
     main()
