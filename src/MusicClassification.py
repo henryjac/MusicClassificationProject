@@ -43,7 +43,7 @@ def main():
     with open('labels/accuracies_latest', 'w') as f:
         f.write('model,mean,standard deviation\n')
         for model,info in models_2_test.items():
-            print(model)
+            print(f'{model}...')
 
             # Preprocessing
             train_data, X_test = preprocessing.preprocessing(X_test_pre_preprocessing, info['preprocessing']['drop'])
@@ -61,22 +61,12 @@ def main():
             y_test.tofile(f'labels/{model}_labels.csv',sep=',')
 
             # Test the accuracy so we can choose the one with best accuracy
-            acc = np.array([])
-            for i in range(100):
-                X_train_acc, X_test_acc, y_train_acc, y_test_acc= train_test_split(
-                    X_train, y_train, test_size=0.3
-                )
-                acc = np.append(
-                    acc,
-                    models.get_accuracy(
-                        X_train_acc, X_test_acc, y_train_acc, y_test_acc,
-                        info['sk_name'], **info['kwargs']
-                    )
-                )
-            avg_acc = acc.mean()
-            std_acc = acc.std()
-            # f.write(f'{model} average accuracy:\n\t{avg_acc}\n')
-            f.write(f'{model},{avg_acc},{std_acc}\n')
+            acc, std = models.cross_validate(
+                np.array(X_train), np.array(y_train), 5,
+                info['sk_name'], **info['kwargs']
+            )
+            f.write(f'{model},{acc},{std}\n')
+            print(f'    k-fold accuracy: {acc} (std={std})')
 
 def test_cross_validation(k=5):
     to_drop = ['key', 'mode']
