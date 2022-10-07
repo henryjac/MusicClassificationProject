@@ -19,13 +19,13 @@ import sys,os
 sys.path.append('src')
 import models
 
-def preprocessing(X_test=None, to_drop=None, use_percentage=1):
+def preprocessing(X_test=None, drop=None, keep=None, use_percentage=1):
     """
     Preprocesses the project_train.csv file by removing irrelevant columns
     and rows.
 
     :param X_test: Remove same columns of the test data as training data
-    :param to_drop: List of column names/indices to drop. default=None
+    :param drop: List of column names/indices to drop. default=None
     :param use_percentage: The fractional part of the dataframe to use. defualt=1
     :return: The DataFrame object
     """
@@ -46,15 +46,25 @@ def preprocessing(X_test=None, to_drop=None, use_percentage=1):
     # as their correlation with the Label is low
     # Also drop column 'instrumentalness' as it's highly correlated with
     # 'acousticness'
-    if to_drop is None:
-        # If to_drop is specified with indices, convert them to feature names
-        to_drop = ['mode','key','liveness']
-    elif isinstance(to_drop[0],int):
-        to_drop = data.columns[to_drop]
-    data = data.drop(to_drop, axis=1)
+    if keep is not None:
+        if isinstance(keep[0],int):
+            keep = data.columns[keep]
+        if 'Label' not in keep:
+            keep_data = pd.Index.append(keep,pd.Index(['Label']))
+        data = data[keep_data]
+        X_test = X_test[keep]
+    else:
+        if drop is None:
+            # If drop is specified with indices, convert them to feature names
+            drop = ['mode','key','liveness']
+        elif isinstance(drop[0],int):
+            drop = data.columns[drop]
+        data = data.drop(drop, axis=1)
+        if X_test is not None:
+            X_test = X_test.drop(drop, axis=1)
+
     data = normalize(data) # Use deviation of mean to normalize
     if X_test is not None:
-        X_test = X_test.drop(to_drop, axis=1)
         X_test = normalize(X_test)
         return data, X_test
     return data
