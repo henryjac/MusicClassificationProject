@@ -163,6 +163,13 @@ def select_most_common_label():
     df_sum[df_sum > nr_of_label_files/2] = 1
     df_sum.to_numpy().tofile('labels/average_labels.csv',sep=',')
 
+def best_model_acc_latest():
+    df = pd.read_csv('labels/accuracies_latest')
+    print('The model with highest accuracy is: {}'.format(df.loc[df["mean"].idxmax()]["model"]))
+    print('The model with accuracy over 0.8 and lowest standard deviation is {}'.format(
+        df.loc[df[df["mean"] > 0.8]["standard deviation"].idxmin()]["model"])
+    )
+
 def main():
     # test_accuracy()
     select_most_common_label()

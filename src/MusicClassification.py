@@ -56,6 +56,44 @@ def main():
         'rfc_nest50_drop248':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':50,'max_features':'sqrt'},'preprocessing':{'drop':[2,4,8]}},
         'rfc_nest100_drop248':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':100,'max_features':'sqrt'},'preprocessing':{'drop':[2,4,8]}},
         'rfc_nest200_drop248':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':200,'max_features':'sqrt'},'preprocessing':{'drop':[2,4,8]}},
+        'svc_rbf_c10_keep03567':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'rbf'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_rbf_c1_keep03567':{'sk_name':SVC,'kwargs':{'C':1,'kernel':'rbf'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_rbf_c01_keep03567':{'sk_name':SVC,'kwargs':{'C':0.1,'kernel':'rbf'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_lin_c10_keep03567':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'linear'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_lin_c1_keep03567':{'sk_name':SVC,'kwargs':{'C':1,'kernel':'linear'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_lin_c01_keep03567':{'sk_name':SVC,'kwargs':{'C':0.1,'kernel':'linear'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_pol_c10_keep03567':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'poly'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_pol_c1_keep03567':{'sk_name':SVC,'kwargs':{'C':1,'kernel':'poly'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_pol_c01_keep03567':{'sk_name':SVC,'kwargs':{'C':0.1,'kernel':'poly'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'knn_n5_keep03567':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':5,'weights':'distance','algorithm':'auto'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'knn_n10_keep03567':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':10,'weights':'distance','algorithm':'auto'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'knn_n15_keep03567':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':15,'weights':'distance','algorithm':'auto'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'lda_keep03567':{'sk_name':LinearDiscriminantAnalysis,'kwargs':{},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'qda_reg1_keep03567':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":1},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'qda_reg01_keep03567':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":0.1},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'qda_reg001_keep03567':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":0.01},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'rfc_nest50_keep03567':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':50,'max_features':'sqrt'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'rfc_nest100_keep03567':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':100,'max_features':'sqrt'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'rfc_nest200_keep03567':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':200,'max_features':'sqrt'},'preprocessing':{'keep':[0,3,5,6,7]}},
+        'svc_rbf_c10_drop248910':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'rbf'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_rbf_c1_drop248910':{'sk_name':SVC,'kwargs':{'C':1,'kernel':'rbf'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_rbf_c01_drop248910':{'sk_name':SVC,'kwargs':{'C':0.1,'kernel':'rbf'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_lin_c10_drop248910':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'linear'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_lin_c1_drop248910':{'sk_name':SVC,'kwargs':{'C':1,'kernel':'linear'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_lin_c01_drop248910':{'sk_name':SVC,'kwargs':{'C':0.1,'kernel':'linear'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_pol_c10_drop248910':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'poly'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_pol_c1_drop248910':{'sk_name':SVC,'kwargs':{'C':1,'kernel':'poly'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'svc_pol_c01_drop248910':{'sk_name':SVC,'kwargs':{'C':0.1,'kernel':'poly'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'knn_n5_drop248910':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':5,'weights':'distance','algorithm':'auto'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'knn_n10_drop248910':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':10,'weights':'distance','algorithm':'auto'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'knn_n15_drop248910':{'sk_name':KNeighborsClassifier,'kwargs':{'n_neighbors':15,'weights':'distance','algorithm':'auto'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'lda_drop248910':{'sk_name':LinearDiscriminantAnalysis,'kwargs':{},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'qda_reg1_drop248910':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":1},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'qda_reg01_drop248910':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":0.1},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'qda_reg001_drop248910':{'sk_name':QuadraticDiscriminantAnalysis,'kwargs':{"reg_param":0.01},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'rfc_nest50_drop248910':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':50,'max_features':'sqrt'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'rfc_nest100_drop248910':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':100,'max_features':'sqrt'},'preprocessing':{'keep':[2,4,8,9,10]}},
+        'rfc_nest200_drop248910':{'sk_name':RandomForestClassifier,'kwargs':{'criterion':'entropy','n_estimators':200,'max_features':'sqrt'},'preprocessing':{'keep':[2,4,8,9,10]}},
     }
 
     X_test_pre_preprocessing = pd.read_csv('data/project_test.csv', encoding='utf-8')
@@ -72,10 +110,14 @@ def main():
         X_train = train_data.drop('Label',axis=1)
         y_train = train_data['Label']
 
-        y_test = models.ML_model_prediction(
-            X_train, X_test, y_train,
-            info['sk_name'], **info['kwargs']
-        )
+        if 'rfc' in model:
+            # Do RFC multiple times since it's random (?)
+            y_test = average_labels_rfc(X_train, X_test, y_train, info)
+        else:
+            y_test = models.ML_model_prediction(
+                X_train, X_test, y_train,
+                info['sk_name'], **info['kwargs']
+            )
         y_test = [int(x) for x in y_test]
         y_test = np.array(y_test)
 
@@ -100,7 +142,22 @@ def main():
         to_concat = pd.DataFrame([[model,avg_acc,std_acc]],columns=["model","mean","standard deviation"])
         latest_acc = pd.concat([latest_acc, to_concat])
 
-    latest_acc.to_csv("labels/accuracies_latest")
+    latest_acc.to_csv("labels/accuracies_latest", index=False)
+
+def average_labels_rfc(X_train, X_test, y_train, info):
+    y_test_final = pd.DataFrame()
+    tries = 50
+    for i in range(tries):
+        y_test = models.ML_model_prediction(
+            X_train, X_test, y_train,
+            info['sk_name'], **info['kwargs']
+        )
+        y_test = pd.DataFrame(y_test)
+        y_test_final = pd.concat([y_test_final, y_test])
+    df_sum = y_test_final.sum().transpose()
+    df_sum[df_sum <= tries/2] = 0 # If we have less than half 0s, set to 0, otherwise 1
+    df_sum[df_sum > tries/2] = 1
+    return df_sum
 
 def test_cross_validation(k=5):
     to_drop = ['key', 'mode']
@@ -110,7 +167,7 @@ def test_cross_validation(k=5):
 
     accuracy = models.cross_validate(X_train, y_train, k, SVC, C=0.2, kernel='rbf')
     print(f"Tested cross validation with k={k}: {accuracy}")
-            
+
 if __name__ == '__main__':
     #test_cross_validation()
     main()
