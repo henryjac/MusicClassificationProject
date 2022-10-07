@@ -1,2 +1,4 @@
 overleaf
 feature_vs_feature/
+*#
+__pycache__
