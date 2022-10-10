@@ -42,10 +42,6 @@ def preprocessing(X_test=None, drop=None, keep=None, use_percentage=1):
     # Use only a random percentage of the data
     data = data.sample(frac=use_percentage)
 
-    # Drop columns 'danceability', 'valence'
-    # as their correlation with the Label is low
-    # Also drop column 'instrumentalness' as it's highly correlated with
-    # 'acousticness'
     if keep is not None:
         if isinstance(keep[0],int):
             keep = data.columns[keep]

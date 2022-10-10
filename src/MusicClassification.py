@@ -156,8 +156,8 @@ def average_labels_rfc(X_train, X_test, y_train, info):
     return df_sum
 
 def test_cross_validation(k=5):
-    to_drop = ['key', 'mode']
-    processed_data = preprocessing.preprocessing(to_drop=to_drop)
+    drop = ['key', 'mode']
+    processed_data = preprocessing.preprocessing(drop=drop)
     X_train = np.array(processed_data.drop('Label', axis=1))
     y_train = np.array(processed_data['Label'])
 
@@ -165,5 +165,5 @@ def test_cross_validation(k=5):
     print(f"Tested cross validation with k={k}: {accuracy}")
 
 if __name__ == '__main__':
-    #test_cross_validation()
+    #test_cross_validation(10)
     main()
