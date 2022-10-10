@@ -11,7 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 import sys,os
 sys.path.append('src')
-import models
+import models, preprocessing
 
 def test_accuracy(test_size=0.3):
     # ------------------- IMPORT DATA ----------------
@@ -73,6 +73,32 @@ def test_accuracy(test_size=0.3):
         print(f'{name}:')
         print(f'Average accuracy: {avg_acc}\nMax accuracy: {max_acc}')
 
+def test_feature_crossing():
+    C = 10
+    k = 10
+    df = preprocessing.preprocessing(drop=["mode","key","valence"])
+
+    X_train = np.array(df.drop("Label", axis=1))
+    y_train = np.array(df["Label"])
+    accuracy = models.cross_validate(X_train, y_train, k, SVC, C=C, kernel='rbf')
+    print(f"Accuracy: {accuracy}")
+    best_acc = accuracy
+    cross = "Normal"
+
+    for i,col1 in enumerate(df.columns[:-1]):
+        for col2 in df.columns[:i]:
+            df2 = preprocessing.feature_cross(df.copy(), col1,col2)
+            X_train = np.array(df2.drop("Label", axis=1))
+            y_train = np.array(df2["Label"])
+            accuracy = models.cross_validate(X_train, y_train, k, SVC, C=C, kernel='rbf')
+            print(f"Accuracy with {col1} x {col2} feature cross: {accuracy}")
+            if accuracy > best_acc:
+                best_acc = accuracy
+                cross = f"{col1} x {col2}"
+    print("Best feature cross:")
+    print(f"{cross} with accuracy {best_acc}")
+
+
 def best_model_acc_latest():
     df = pd.read_csv('labels/accuracies_latest')
     print('The model with highest accuracy is: {}'.format(df.loc[df["mean"].idxmax()]["model"]))
@@ -81,7 +107,8 @@ def best_model_acc_latest():
     )
 
 def main():
-    test_accuracy()
+    # test_accuracy()
+    test_feature_crossing()
 
 if __name__ == '__main__':
     main()
