@@ -110,14 +110,10 @@ def main():
         X_train = train_data.drop('Label',axis=1)
         y_train = train_data['Label']
 
-        if 'rfc' in model:
-            # Do RFC multiple times since it's random (?)
-            y_test = average_labels_rfc(X_train, X_test, y_train, info)
-        else:
-            y_test = models.ML_model_prediction(
-                X_train, X_test, y_train,
-                info['sk_name'], **info['kwargs']
-            )
+        y_test = models.ML_model_prediction(
+            X_train, X_test, y_train,
+            info['sk_name'], **info['kwargs']
+        )
         y_test = [int(x) for x in y_test]
         y_test = np.array(y_test)
 
@@ -155,8 +151,8 @@ def average_labels_rfc(X_train, X_test, y_train, info):
         y_test = pd.DataFrame(y_test)
         y_test_final = pd.concat([y_test_final, y_test])
     df_sum = y_test_final.sum().transpose()
-    df_sum[df_sum <= tries/2] = 0 # If we have less than half 0s, set to 0, otherwise 1
     df_sum[df_sum > tries/2] = 1
+    df_sum[df_sum <= tries/2] = 0 # If we have less than half 0s, set to 0, otherwise 1
     return df_sum
 
 def test_cross_validation(k=5):
