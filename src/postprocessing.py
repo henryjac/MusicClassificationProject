@@ -29,7 +29,6 @@ def main():
     labels = label_files.copy()
     label_files = ["labels/"+label for label in label_files]
 
-    # label_files = label_files[:6]
     length = 0
     for i,label1 in enumerate(label_files):
         length += 1
