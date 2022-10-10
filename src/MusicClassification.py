@@ -164,6 +164,23 @@ def test_cross_validation(k=5):
     accuracy = models.cross_validate(X_train, y_train, k, SVC, C=0.2, kernel='rbf')
     print(f"Tested cross validation with k={k}: {accuracy}")
 
+def test_grid_search():
+    drop = ['key', 'mode']
+    processed_data = preprocessing.preprocessing(drop=drop)
+    X_train = np.array(processed_data.drop('Label', axis=1))
+    y_train = np.array(processed_data['Label'])
+
+    (estimator, params) = models.grid_search(
+        X_train, y_train, SVC,
+        {
+            'C':([0.01*i for i in range(1, 10)] + [0.1*i for i in range(1, 10)]
+                   + [i for i in range(1, 10)] + [10*i for i in range(1, 10)]),
+            'kernel':['rbf', 'linear']
+        }
+    )
+    print(f"{params}")
+    
 if __name__ == '__main__':
+    test_grid_search()
     #test_cross_validation(10)
-    main()
+    #main()

@@ -1,5 +1,7 @@
 import numpy as np
 
+from sklearn.model_selection import GridSearchCV
+
 def ML_model_prediction(X_train, X_test, y_train, ML_model, **kwargs):
     model = ML_model(**kwargs)
     model.fit(X_train, y_train)
@@ -11,6 +13,30 @@ def get_accuracy(X_train, X_test, y_train, y_test, ML_model, **kwargs):
     acc = y_test - labels
     acc = 1 - np.dot(acc,acc) / len(y_test)
     return acc
+
+# Uses 5-fold cross validation to perform gridsearch over the given
+# hyperparameter space for the given model.
+#
+# Note, if memory issues are encountered when running this job in parallel,
+# try setting pre_dispatch=2*n_jobs to reduce the memory load.
+#
+# returns model: the estimator function for the best model
+#         param: the parameters for the best model found
+def grid_search(X_train, y_train, ML_model, parameter_space, verbose=True, n_cores=28):
+    search_object = GridSearchCV(ML_model(), parameter_space, n_jobs=n_cores)
+
+    if verbose:
+        print(f"Performing grid search for {ML_model} on {n_cores} cores...")
+    search_object.fit(X_train, y_train)
+
+    best_score = search_object.best_score_
+    model = search_object.best_estimator_
+    param = search_object.best_params_
+    if verbose:
+        print(f"    best score: {best_score}")
+        print(f"    with param: {param}")
+        
+    return (model, param)
 
 def cross_validate(X_train, y_train, folds, ML_model, **kwargs):
     # determine number of elements per fold
