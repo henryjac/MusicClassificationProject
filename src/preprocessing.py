@@ -5,21 +5,13 @@ import pandas as pd
 import statistics as s
 import numpy as np
 import matplotlib.pyplot as plt
-
-from numpy import genfromtxt
-from scipy.optimize import minimize
-from sklearn.model_selection import KFold, train_test_split
-from sklearn.svm import SVC # Supprort Vector classifier
-from sklearn.neighbors import KNeighborsClassifier # KNN
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.ensemble import RandomForestClassifier
 
 import sys,os
 sys.path.append('src')
 import models
 
-def preprocessing(X_test=None, drop=None, keep=None, use_percentage=1):
+def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
     """
     Preprocesses the project_train.csv file by removing irrelevant columns
     and rows.
@@ -42,18 +34,15 @@ def preprocessing(X_test=None, drop=None, keep=None, use_percentage=1):
     # Use only a random percentage of the data
     data = data.sample(frac=use_percentage)
 
-    if keep is not None:
+    if keep != []:
         if isinstance(keep[0],int):
             keep = data.columns[keep]
         if 'Label' not in keep:
             keep_data = pd.Index.append(keep,pd.Index(['Label']))
         data = data[keep_data]
         X_test = X_test[keep]
-    else:
-        if drop is None:
-            # If drop is specified with indices, convert them to feature names
-            drop = ['mode','key','liveness']
-        elif isinstance(drop[0],int):
+    elif drop != []:
+        if isinstance(drop[0],int):
             drop = data.columns[drop]
         data = data.drop(drop, axis=1)
         if X_test is not None:
@@ -67,6 +56,13 @@ def preprocessing(X_test=None, drop=None, keep=None, use_percentage=1):
 
 def normalize(dataframe):
     return (dataframe - dataframe.min()) / (dataframe.max() - dataframe.min())
+
+def feature_cross(df, column_1, column_2):
+    new_feature = column_1+"_x_"+column_2
+    x = [*df.columns[:-1],new_feature,"Label"]
+    df[new_feature] = df[column_1] * df[column_2]
+    df = df.reindex(columns=x)
+    return df
 
 def best_features_from_RFC(data, n_best=4):
     """
@@ -85,66 +81,6 @@ def best_features_from_RFC(data, n_best=4):
 
     return data.drop(features[indices[:-4]], axis=1)
 
-def test_accuracy(test_size=0.3):
-    # ------------------- IMPORT DATA ----------------
-    # Import data
-    svc_accs = np.array([])
-    knn_accs = np.array([])
-    lda_accs = np.array([])
-    qda_accs = np.array([])
-    rfc_accs = np.array([])
-    # data = preprocessing()
-    train_file = 'data/project_train.csv'
-    data = pd.read_csv(train_file, encoding='utf-8')
-    for i in range(10):
-        # Split data
-        # data = best_features_from_RFC(data)
-        X_train, X_test, y_train, y_test = train_test_split(
-            data.iloc[:, :-1], data.iloc[:, -1], test_size=test_size
-        )
-        to_drop = ['key','mode']
-        X_train = X_train.drop(to_drop, axis=1)
-        X_test = X_test.drop(to_drop, axis=1)
-
-        acc = models.get_accuracy(
-            X_train, X_test, y_train, y_test,
-            SVC, C=0.2, kernel='rbf'
-        )
-        svc_accs = np.append(rfc_accs, acc)
-
-        acc = models.get_accuracy(
-            X_train, X_test, y_train, y_test,
-            KNeighborsClassifier, n_neighbors=10, weights='distance', algorithm='auto'
-        )
-        knn_accs = np.append(rfc_accs, acc)
-
-        acc = models.get_accuracy(
-            X_train, X_test, y_train, y_test,
-            LinearDiscriminantAnalysis
-        )
-        lda_accs = np.append(rfc_accs, acc)
-
-        acc = models.get_accuracy(
-            X_train, X_test, y_train, y_test,
-            QuadraticDiscriminantAnalysis, reg_param=0.01
-        )
-        qda_accs = np.append(rfc_accs, acc)
-
-        acc = models.get_accuracy(
-            X_train, X_test, y_train, y_test,
-            RandomForestClassifier, criterion='entropy', n_estimators=200, max_features='sqrt'
-        )
-        rfc_accs = np.append(rfc_accs, acc)
-    avg_acc_rfc = rfc_accs.sum()/rfc_accs.size
-    max_acc_rfc = rfc_accs.max()
-    accuracies = [svc_accs, knn_accs, lda_accs, qda_accs, rfc_accs]
-    accuracies_name = ['SVC','KNN','LDA','QDA','RFC']
-    for accs,name in zip(accuracies,accuracies_name):
-        avg_acc = accs.sum()/accs.size
-        max_acc = accs.max()
-        print(f'{name}:')
-        print(f'Average accuracy: {avg_acc}\nMax accuracy: {max_acc}')
-
 def select_most_common_label():
     dfs = pd.DataFrame()
     nr_of_label_files =  0
@@ -159,16 +95,9 @@ def select_most_common_label():
     df_sum[df_sum > nr_of_label_files/2] = 1
     df_sum.to_numpy().tofile('labels/average_labels.csv',sep=',')
 
-def best_model_acc_latest():
-    df = pd.read_csv('labels/accuracies_latest')
-    print('The model with highest accuracy is: {}'.format(df.loc[df["mean"].idxmax()]["model"]))
-    print('The model with accuracy over 0.8 and lowest standard deviation is {}'.format(
-        df.loc[df[df["mean"] > 0.8]["standard deviation"].idxmin()]["model"])
-    )
-
 def main():
-    # test_accuracy()
-    select_most_common_label()
+    # select_most_common_label()
+    feature_cross(preprocessing(), "valence", "key")
 
 if __name__ == '__main__':
     main()
