@@ -83,7 +83,7 @@ def main():
 
         y_test = estimator.predict(X_test)
         labels = np.array([int(i) for i in y_test])
-        labels.tofile(f'{model}_labels.csv', sep=',')
+        labels.tofile(f'labels/{model}_labels.csv', sep=',')
 
 #   models_2_test = {
 #       'svc_rbf_c10_keep05':{'sk_name':SVC,'kwargs':{'C':10,'kernel':'rbf'},'preprocessing':{'keep':[0,5]}},
@@ -245,7 +245,7 @@ def test_grid_search():
             'kernel':['rbf', 'linear']
         }
     )
-    
+
 if __name__ == '__main__':
     #test_grid_search()
     #test_cross_validation(10)
