@@ -24,9 +24,12 @@ def get_accuracy(X_train, X_test, y_train, y_test, ML_model, **kwargs):
 #         param: the parameters for the best model found
 def grid_search(X_train, y_train, ML_model, parameter_space, verbose=True, n_cores=28):
     search_object = GridSearchCV(ML_model(), parameter_space, n_jobs=n_cores)
-
+    n_cases = 1
+    for param in parameter_space:
+        n_cases *= len(parameter_space[param])
+    
     if verbose:
-        print(f"Performing grid search for {ML_model} on {n_cores} cores...")
+        print(f"Performing grid search for {ML_model.__name__} on {n_cores} cores ({n_cases} cases)...")
     search_object.fit(X_train, y_train)
 
     best_score = search_object.best_score_
