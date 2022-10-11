@@ -57,10 +57,13 @@ def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
 def normalize(dataframe):
     return (dataframe - dataframe.min()) / (dataframe.max() - dataframe.min())
 
-def feature_cross(df, column_1, column_2):
-    new_feature = column_1+"_x_"+column_2
+def feature_cross(df, *columns):
+    new_feature = '_x_'.join(columns)
     x = [*df.columns[:-1],new_feature,"Label"]
-    df[new_feature] = df[column_1] * df[column_2]
+    df[new_feature] = df[columns[0]]
+    for column in columns[1:]:
+        df[new_feature] *= df[column]
+
     df = df.reindex(columns=x)
     return df
 

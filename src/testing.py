@@ -86,7 +86,7 @@ def test_feature_crossing():
     cross = "Normal"
 
     for i,col1 in enumerate(df.columns[:-1]):
-        for col2 in df.columns[:i]:
+        for j,col2 in enumerate(df.columns[:i+1]):
             df2 = preprocessing.feature_cross(df.copy(), col1,col2)
             X_train = np.array(df2.drop("Label", axis=1))
             y_train = np.array(df2["Label"])
@@ -95,6 +95,15 @@ def test_feature_crossing():
             if accuracy > best_acc:
                 best_acc = accuracy
                 cross = f"{col1} x {col2}"
+            for col3 in df.columns[:j+1]:
+                df2 = preprocessing.feature_cross(df.copy(), col1,col2,col3)
+                X_train = np.array(df2.drop("Label", axis=1))
+                y_train = np.array(df2["Label"])
+                accuracy = models.cross_validate(X_train, y_train, k, SVC, C=C, kernel='rbf')
+                print(f"Accuracy with {col1} x {col2} x {col3} feature cross: {accuracy}")
+                if accuracy > best_acc:
+                    best_acc = accuracy
+                    cross = f"{col1} x {col2} x {col3}"
     print("Best feature cross:")
     print(f"{cross} with accuracy {best_acc}")
 
