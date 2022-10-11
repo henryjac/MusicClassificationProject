@@ -71,7 +71,6 @@ def main():
         for i in range(len(drop_order)):
             drop = drop_order[:i]
             info['preprocessing']['drop'] = drop
-            # TODO: Can easily implement a preprocessing gridsearch by adding an inner loop here
 
             # Preprocessing
             train_data, X_test = preprocessing.preprocessing(X_test_pre_preprocessing, **info['preprocessing'])
@@ -82,7 +81,7 @@ def main():
                 X_train, y_train,
                 info['sk_name'], info['params'],
                 verbose=True,
-                n_cores=2,
+                n_cores=28,
                 preprocessing=drop,
             )
 

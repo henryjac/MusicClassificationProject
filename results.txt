@@ -1,0 +1,224 @@
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop []
+    best score: 0.823009900990099
+    with param: {'C': 1, 'kernel': 'poly'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4]
+    best score: 0.8272079207920793
+    with param: {'C': 1, 'kernel': 'poly'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2]
+    best score: 0.8411287128712873
+    with param: {'C': 9, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8]
+    best score: 0.8210297029702971
+    with param: {'C': 0.30000000000000004, 'kernel': 'poly'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9]
+    best score: 0.818930693069307
+    with param: {'C': 30, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10]
+    best score: 0.822970297029703
+    with param: {'C': 50, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1]
+    best score: 0.805089108910891
+    with param: {'C': 50, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7]
+    best score: 0.8052277227722773
+    with param: {'C': 30, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6]
+    best score: 0.8070297029702971
+    with param: {'C': 8, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3]
+    best score: 0.7972079207920792
+    with param: {'C': 20, 'kernel': 'rbf'}
+Performing grid search for SVC on 28 cores (111 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3, 5]
+    best score: 0.7414851485148516
+    with param: {'C': 0.09, 'kernel': 'linear'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop []
+    best score: 0.7952475247524753
+    with param: {'algorithm': 'auto', 'n_neighbors': 4, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4]
+    best score: 0.7912475247524753
+    with param: {'algorithm': 'auto', 'n_neighbors': 5, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2]
+    best score: 0.8230297029702971
+    with param: {'algorithm': 'auto', 'n_neighbors': 5, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8]
+    best score: 0.8131089108910892
+    with param: {'algorithm': 'auto', 'n_neighbors': 10, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9]
+    best score: 0.8072475247524753
+    with param: {'algorithm': 'auto', 'n_neighbors': 8, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10]
+    best score: 0.8112277227722773
+    with param: {'algorithm': 'auto', 'n_neighbors': 10, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1]
+    best score: 0.818970297029703
+    with param: {'algorithm': 'auto', 'n_neighbors': 15, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7]
+    best score: 0.819148514851485
+    with param: {'algorithm': 'auto', 'n_neighbors': 5, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6]
+    best score: 0.819049504950495
+    with param: {'algorithm': 'auto', 'n_neighbors': 23, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3]
+    best score: 0.8012475247524751
+    with param: {'algorithm': 'auto', 'n_neighbors': 14, 'weights': 'distance'}
+Performing grid search for KNeighborsClassifier on 28 cores (23 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3, 5]
+    best score: 0.6997227722772277
+    with param: {'algorithm': 'auto', 'n_neighbors': 18, 'weights': 'distance'}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop []
+    best score: 0.7992673267326734
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4]
+    best score: 0.7891881188118812
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2]
+    best score: 0.7872475247524753
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8]
+    best score: 0.7792079207920792
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9]
+    best score: 0.7732871287128714
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10]
+    best score: 0.7812475247524753
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1]
+    best score: 0.7635049504950494
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7]
+    best score: 0.7576435643564357
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6]
+    best score: 0.7613663366336635
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3]
+    best score: 0.7673861386138615
+    with param: {}
+Performing grid search for LinearDiscriminantAnalysis on 28 cores (1 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3, 5]
+    best score: 0.7256633663366336
+    with param: {}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop []
+    best score: 0.7832475247524752
+    with param: {'reg_param': 5e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4]
+    best score: 0.7933861386138614
+    with param: {'reg_param': 9e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2]
+    best score: 0.7713465346534654
+    with param: {'reg_param': 0.0008}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8]
+    best score: 0.7474059405940594
+    with param: {'reg_param': 0.00030000000000000003}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9]
+    best score: 0.7496831683168317
+    with param: {'reg_param': 1e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10]
+    best score: 0.7476039603960396
+    with param: {'reg_param': 1e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1]
+    best score: 0.7494455445544554
+    with param: {'reg_param': 8e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7]
+    best score: 0.7772277227722773
+    with param: {'reg_param': 0.0002}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6]
+    best score: 0.7653663366336635
+    with param: {'reg_param': 1e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3]
+    best score: 0.7833861386138614
+    with param: {'reg_param': 1e-05}
+Performing grid search for QuadraticDiscriminantAnalysis on 28 cores (37 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3, 5]
+    best score: 0.7435643564356436
+    with param: {'reg_param': 0.01}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop []
+    best score: 0.856930693069307
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 282}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4]
+    best score: 0.844910891089109
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 207}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2]
+    best score: 0.8547722772277228
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 239}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8]
+    best score: 0.8508712871287128
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 45}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9]
+    best score: 0.837089108910891
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 135}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10]
+    best score: 0.832950495049505
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 138}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1]
+    best score: 0.8211287128712872
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 122}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7]
+    best score: 0.8249108910891089
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 51}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6]
+    best score: 0.8170693069306931
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 193}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3]
+    best score: 0.7753267326732673
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 41}
+Performing grid search for RandomForestClassifier on 28 cores (496 cases)...
+Preprocessing: Drop [4, 2, 8, 9, 10, 1, 7, 6, 3, 5]
+    best score: 0.6937623762376238
+    with param: {'criterion': 'entropy', 'max_features': 'sqrt', 'n_estimators': 5}
+
+real	6m22,634s
+user	173m25,477s
+sys	0m23,073s
