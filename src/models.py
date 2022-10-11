@@ -22,14 +22,16 @@ def get_accuracy(X_train, X_test, y_train, y_test, ML_model, **kwargs):
 #
 # returns model: the estimator function for the best model
 #         param: the parameters for the best model found
-def grid_search(X_train, y_train, ML_model, parameter_space, verbose=True, n_cores=28):
+def grid_search(X_train, y_train, ML_model, parameter_space, verbose=True, n_cores=28, preprocessing=None):
     search_object = GridSearchCV(ML_model(), parameter_space, n_jobs=n_cores)
     n_cases = 1
     for param in parameter_space:
         n_cases *= len(parameter_space[param])
-    
+
     if verbose:
         print(f"Performing grid search for {ML_model.__name__} on {n_cores} cores ({n_cases} cases)...")
+        if preprocessing is not None:
+            print(f"Preprocessing: Drop {preprocessing}")
     search_object.fit(X_train, y_train)
 
     best_score = search_object.best_score_
@@ -38,7 +40,7 @@ def grid_search(X_train, y_train, ML_model, parameter_space, verbose=True, n_cor
     if verbose:
         print(f"    best score: {best_score}")
         print(f"    with param: {param}")
-        
+
     return (model, param)
 
 def cross_validate(X_train, y_train, folds, ML_model, **kwargs):
