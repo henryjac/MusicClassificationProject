@@ -41,7 +41,7 @@ def grid_search(X_train, y_train, ML_model, parameter_space, verbose=True, n_cor
         print(f"    best score: {best_score}")
         print(f"    with param: {param}")
 
-    return (model, param)
+    return (model, param, best_score)
 
 def cross_validate(X_train, y_train, folds, ML_model, **kwargs):
     # determine number of elements per fold

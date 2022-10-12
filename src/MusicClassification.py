@@ -68,6 +68,12 @@ def main():
 
     drop_order = [4,2,8,9,10,1,7,6,3,5,0]
     for model, info in models_2_test.items():
+        best_acc = 0.0
+        best_params = None
+        best_drop = None
+
+        print(f"Running search for {model}", end="", flush=True)
+        
         for i in range(len(drop_order)):
             drop = drop_order[:i]
             info['preprocessing']['drop'] = drop
@@ -77,14 +83,19 @@ def main():
             X_train = train_data.drop('Label',axis=1)
             y_train = train_data['Label']
 
-            (estimator, params) = models.grid_search(
+            (estimator, params, score) = models.grid_search(
                 X_train, y_train,
                 info['sk_name'], info['params'],
-                verbose=True,
+                verbose=False,
                 n_cores=28,
                 preprocessing=drop,
             )
 
+            if score > best_acc:
+                best_acc = score
+                best_params = params
+                best_drop = drop
+            
             y_test = estimator.predict(X_test)
             labels = np.array([int(i) for i in y_test])
 
@@ -95,6 +106,11 @@ def main():
                 preprocessing_data = f"_drop{preprocessing_data}"
             folder = model[:3]
             labels.tofile(f'labels/{folder}/{model}{preprocessing_data}_labels.csv', sep=',')
+            print(".", end="", flush=True)
+
+        print(f"\n    best score: {best_acc}")
+        print(f"    with param: {best_params}")
+        print(f"    when omitt: {best_drop}")
 
 def average_labels_rfc(X_train, X_test, y_train, info):
     y_test_final = pd.DataFrame()
@@ -126,7 +142,7 @@ def test_grid_search():
     X_train = np.array(processed_data.drop('Label', axis=1))
     y_train = np.array(processed_data['Label'])
 
-    (estimator, params) = models.grid_search(
+    (estimator, params, score) = models.grid_search(
         X_train, y_train, SVC,
         {
             'C':([0.01*i for i in range(1, 10)] + [0.1*i for i in range(1, 10)]
