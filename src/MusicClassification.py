@@ -9,6 +9,7 @@ from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.ensemble import RandomForestClassifier
 
 import sys
+import time
 sys.path.append('src')
 import preprocessing
 import models
@@ -27,7 +28,7 @@ def main():
         'svc':{
             'sk_name':SVC,
             'params':{
-                'C':loglinstep(0.01, 100),
+                'C':loglinstep(0.01, 10),
                 'kernel':['linear', 'rbf', 'poly']
             },
             'preprocessing':{}
@@ -66,11 +67,11 @@ def main():
 
     X_test_pre_preprocessing = pd.read_csv('data/project_test.csv', encoding='utf-8')
 
-    batches = 20
+    batches = 50
     results = {}
     
     # drop_order = [4,2,8,9,10,1,7,6,3,5,0]
-    drop_order = [4,2,8,9]
+    drop_order = [4,2,8,9,10,1]
     for model, info in models_2_test.items():
         # creates entry for new model
         results[model] = {}
@@ -100,7 +101,7 @@ def main():
                     X_train, y_train,
                     info['sk_name'], info['params'],
                     verbose=False,
-                    n_cores=28,
+                    n_cores=30,
                     preprocessing=drop,
                 ) # this takes time
 
