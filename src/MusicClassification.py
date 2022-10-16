@@ -9,6 +9,7 @@ from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.ensemble import RandomForestClassifier
 
 import sys
+import time
 sys.path.append('src')
 import preprocessing
 import models
@@ -27,7 +28,7 @@ def main():
         'svc':{
             'sk_name':SVC,
             'params':{
-                'C':loglinstep(0.01, 100),
+                'C':loglinstep(0.01, 10),
                 'kernel':['linear', 'rbf', 'poly']
             },
             'preprocessing':{}
@@ -57,7 +58,7 @@ def main():
             'sk_name':RandomForestClassifier,
             'params':{
                 'criterion':['entropy'],
-                'n_estimators':[i for i in range(5, 501, 1)],
+                'n_estimators':[i for i in range(5, 501, 5)],
                 'max_features':['sqrt']
             },
             'preprocessing':{}
@@ -66,36 +67,50 @@ def main():
 
     X_test_pre_preprocessing = pd.read_csv('data/project_test.csv', encoding='utf-8')
 
-    drop_order = [4,2,8,9,10,1,7,6,3,5,0]
+    batches = 50
+    results = {}
+    
+    # drop_order = [4,2,8,9,10,1,7,6,3,5,0]
+    drop_order = [4,2,8,9,10,1]
     for model, info in models_2_test.items():
-        best_acc = 0.0
-        best_params = None
-        best_drop = None
-
-        print(f"Running search for {model}", end="", flush=True)
+        # creates entry for new model
+        results[model] = {}
+        
+        print(f"Running search for {model}", flush=True)
         
         for i in range(len(drop_order)):
             drop = drop_order[:i]
             info['preprocessing']['drop'] = drop
+            drop = tuple(drop)
 
-            # Preprocessing
-            train_data, X_test = preprocessing.preprocessing(X_test_pre_preprocessing, **info['preprocessing'])
-            X_train = train_data.drop('Label',axis=1)
-            y_train = train_data['Label']
-
-            (estimator, params, score) = models.grid_search(
-                X_train, y_train,
-                info['sk_name'], info['params'],
-                verbose=False,
-                n_cores=28,
-                preprocessing=drop,
-            )
-
-            if score > best_acc:
-                best_acc = score
-                best_params = params
-                best_drop = drop
+            print(f"    preprocessing {i}", end = "", flush=True)
             
+            # creates entry for preprocessing option and parameters
+            results[model][drop] = {}
+            for parameter in info['params']:
+                results[model][drop][parameter] = []
+            results[model][drop]['results'] = []
+                
+            for i in range(batches):
+                # Preprocessing
+                train_data, X_test = preprocessing.preprocessing(X_test_pre_preprocessing, **info['preprocessing'])
+                X_train = train_data.drop('Label',axis=1)
+                y_train = train_data['Label']
+                
+                (estimator, params, score) = models.grid_search(
+                    X_train, y_train,
+                    info['sk_name'], info['params'],
+                    verbose=False,
+                    n_cores=30,
+                    preprocessing=drop,
+                ) # this takes time
+
+                for param in params:
+                    results[model][drop][param] += [params[param]]
+                results[model][drop]['results'] += [score]
+                print(".", end="", flush=True)
+            print()
+
             y_test = estimator.predict(X_test)
             labels = np.array([int(i) for i in y_test])
 
@@ -106,11 +121,52 @@ def main():
                 preprocessing_data = f"_drop{preprocessing_data}"
             folder = model[:3]
             labels.tofile(f'labels/{folder}/{model}{preprocessing_data}_labels.csv', sep=',')
-            print(".", end="", flush=True)
 
-        print(f"\n    best score: {best_acc}")
-        print(f"    with param: {best_params}")
-        print(f"    when omitt: {best_drop}")
+    # data analysis
+    print(f"Analysing results from {batches} batches...")
+    statistics = {}
+    for model, model_results in results.items():
+        best_acc = 0.0
+        best_drop = None
+
+        statistics[model] = {}
+        
+        for preopts, preopts_results in model_results.items():
+            point_statistics = {}
+            for value, values in preopts_results.items():
+                if isinstance(values[0], str):
+                    point_statistics[value] = [values[0]]
+                    continue
+                npify = np.array(values)
+                point_statistics[value] = [
+                    npify.mean(),
+                    npify.std(),
+                    np.median(npify)
+                ]
+
+            if point_statistics['results'][0] > best_acc:
+                best_acc = point_statistics['results'][0]
+                best_drop = preopts
+
+            statistics[model][preopts] = point_statistics
+
+        statistics[model]['best_pre'] = best_drop
+
+    # print results
+    for model, model_stat in statistics.items():
+        best_pre = model_stat['best_pre']
+        print(f"Results for {model}:")
+        print(f"    best average accuracy: {model_stat[best_pre]['results'][0]} ({model_stat[best_pre]['results'][1]})")
+        print(f"    achieved for pre_opts: {best_pre} (dropped labels)")
+        print(f"    average parameters for preprocessing options:")
+        for value, values in model_stat[best_pre].items():
+            if value == 'results':
+                continue
+            if isinstance(values[0], str):
+                print(f"        {value:>15}: {values[0]}")
+                continue
+            print(f"        {value:>15}: avg: {values[0]:.10f}  median: {values[2]:.10f}  std: {values[1]:.10f}")
+            
 
 def average_labels_rfc(X_train, X_test, y_train, info):
     y_test_final = pd.DataFrame()
