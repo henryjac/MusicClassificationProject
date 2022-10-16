@@ -60,7 +60,8 @@ def main():
                 'n_estimators':[i for i in range(5, 501, 1)],
                 'max_features':['sqrt']
             },
-            'preprocessing':{}
+            'preprocessing':{},
+            'threshold':0.4,
         }
     }
 
@@ -68,12 +69,14 @@ def main():
 
     drop_order = [4,2,8,9,10,1,7,6,3,5,0]
     for model, info in models_2_test.items():
+        if model != 'rfc':
+            continue
         best_acc = 0.0
         best_params = None
         best_drop = None
 
         print(f"Running search for {model}", end="", flush=True)
-        
+
         for i in range(len(drop_order)):
             drop = drop_order[:i]
             info['preprocessing']['drop'] = drop
@@ -95,8 +98,12 @@ def main():
                 best_acc = score
                 best_params = params
                 best_drop = drop
-            
-            y_test = estimator.predict(X_test)
+
+            if model == 'rfc':
+                y_test = model.predict_proba(X_test)
+                y_test = (y_test[:,1] >= 0.4).astype('int')
+            else:
+                y_test = estimator.predict(X_test)
             labels = np.array([int(i) for i in y_test])
 
             preprocessing_data = ''.join([str(i) for i in info['preprocessing']['drop']])
