@@ -11,7 +11,7 @@ import sys,os
 sys.path.append('src')
 import models
 
-def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1, drop_x_liked=0):
+def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
     """
     Preprocesses the project_train.csv file by removing irrelevant columns
     and rows.
@@ -33,10 +33,6 @@ def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1, drop_x_liked=
 
     # Use only a random percentage of the data
     data = data.sample(frac=use_percentage)
-
-    # Drop a percentage of liked songs since it seems in the test data 
-    # he doesnt like a lot of the songs
-    data = data.drop(data[data['Label'] == 1].sample(frac=drop_x_liked).index)
 
     if keep != []:
         if isinstance(keep[0],int):
