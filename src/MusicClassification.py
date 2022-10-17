@@ -65,7 +65,7 @@ def main():
         # }
     }
 
-    batches = 2
+    batches = 20
     results = {}
 
     # drop_order = [4,2,8,9,10,1,7,6,3,5,0]
@@ -97,6 +97,8 @@ def main():
                         results[model][drop][parameter] = []
                     results[model][drop]['results'] = []
 
+                    y_test = []
+                    
                     for _ in range(batches):
                         # Preprocessing
                         train_data, X_test = preprocessing.preprocessing(**info['preprocessing'])
@@ -107,26 +109,30 @@ def main():
                             X_train, y_train,
                             info['sk_name'], info['params'],
                             verbose=False,
-                            n_cores=2,
+                            n_cores=30,
                             preprocessing=drop,
                         ) # this takes time
 
                         for param in params:
                             results[model][drop][param] += [params[param]]
                         results[model][drop]['results'] += [score]
+
+                        y_temp = estimator.predict(X_test)
+                        y_test += [[int(i) for i in y_temp]]
+                        
                         print(".", end="", flush=True)
                     print()
 
-                    y_test = estimator.predict(X_test)
-                    labels = np.array([int(i) for i in y_test])
+                    # voting
+                    labels = [sum([y_test[j][i] for j in range(batches)]) for i in range(len(y_test[0]))]
+                    labels = np.array([int(np.round(labels[i]/batches)) for i in range(len(y_test[0]))])
 
                     preprocessing_data = ''.join([str(i) for i in info['preprocessing']['drop']])
-                    if preprocessing_data == '':
-                        preprocessing_data = ''
-                    else:
-                        preprocessing_data = f"_drop{preprocessing_data}"
+                    feature_cross_data = ''.join([str(i) for i in feature_crosses])
+                    preprocessing_data = '' if preprocessing_data == '' else f"_drop{preprocessing_data}"
+                    feature_cross_data = '' if feature_cross_data == '' else f"_cross{feature_cross_data}"
                     folder = model[:3]
-                    labels.tofile(f'labels/{folder}/{model}{preprocessing_data}_labels.csv', sep=',')
+                    labels.tofile(f'labels/{folder}/{model}{preprocessing_data}{feature_cross_data}_labels.csv', sep=',')
 
     # data analysis
     print(f"Analysing results from {batches} batches...")
@@ -163,7 +169,7 @@ def main():
         best_pre = model_stat['best_pre']
         print(f"Results for {model}:")
         print(f"    best average accuracy: {model_stat[best_pre]['results'][0]} ({model_stat[best_pre]['results'][1]})")
-        print(f"    achieved for pre_opts: {best_pre} (dropped labels)")
+        print(f"    achieved for pre_opts: {best_pre} (dropped labels, feature cross)")
         print(f"    average parameters for preprocessing options:")
         for value, values in model_stat[best_pre].items():
             if value == 'results':
