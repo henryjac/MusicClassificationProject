@@ -54,73 +54,79 @@ def main():
             },
             'preprocessing':{}
         },
-        'rfc':{
-            'sk_name':RandomForestClassifier,
-            'params':{
-                'criterion':['entropy'],
-                'n_estimators':[i for i in range(5, 501, 5)],
-                'max_features':['sqrt']
-            },
-            'preprocessing':{}
-        }
+        # 'rfc':{
+        #     'sk_name':RandomForestClassifier,
+        #     'params':{
+        #         'criterion':['entropy'],
+        #         'n_estimators':[i for i in range(5, 501, 5)],
+        #         'max_features':['sqrt']
+        #     },
+        #     'preprocessing':{}
+        # }
     }
 
-    X_test_pre_preprocessing = pd.read_csv('data/project_test.csv', encoding='utf-8')
-
-    batches = 50
+    batches = 2
     results = {}
-    
+
     # drop_order = [4,2,8,9,10,1,7,6,3,5,0]
     drop_order = [4,2,8,9,10,1]
+    feature_cross = [7,6,3,5,0] # Maybe include dropped as well
     for model, info in models_2_test.items():
         # creates entry for new model
         results[model] = {}
-        
+
         print(f"Running search for {model}", flush=True)
-        
-        for i in range(len(drop_order)):
-            drop = drop_order[:i]
-            info['preprocessing']['drop'] = drop
-            drop = tuple(drop)
 
-            print(f"    preprocessing {i}", end = "", flush=True)
-            
-            # creates entry for preprocessing option and parameters
-            results[model][drop] = {}
-            for parameter in info['params']:
-                results[model][drop][parameter] = []
-            results[model][drop]['results'] = []
-                
-            for i in range(batches):
-                # Preprocessing
-                train_data, X_test = preprocessing.preprocessing(X_test_pre_preprocessing, **info['preprocessing'])
-                X_train = train_data.drop('Label',axis=1)
-                y_train = train_data['Label']
-                
-                (estimator, params, score) = models.grid_search(
-                    X_train, y_train,
-                    info['sk_name'], info['params'],
-                    verbose=False,
-                    n_cores=30,
-                    preprocessing=drop,
-                ) # this takes time
+        for i in range(len(feature_cross)):
+            for j in range(i+1):
+                for k in range(len(drop_order)):
+                    drop = drop_order[:k]
+                    if feature_cross[i] is None or feature_cross[j] is None:
+                        feature_crosses = []
+                    else:
+                        feature_crosses = [feature_cross[i],feature_cross[j]]
+                    info['preprocessing']['drop'] = drop
+                    info['preprocessing']['feature_crosses'] = feature_crosses
+                    drop = (tuple(drop),tuple(feature_crosses))
 
-                for param in params:
-                    results[model][drop][param] += [params[param]]
-                results[model][drop]['results'] += [score]
-                print(".", end="", flush=True)
-            print()
+                    print(f"    preprocessing {i},{j},{k}", end = "", flush=True)
 
-            y_test = estimator.predict(X_test)
-            labels = np.array([int(i) for i in y_test])
+                    # creates entry for preprocessing option and parameters
+                    results[model][drop] = {}
+                    for parameter in info['params']:
+                        results[model][drop][parameter] = []
+                    results[model][drop]['results'] = []
 
-            preprocessing_data = ''.join([str(i) for i in info['preprocessing']['drop']])
-            if preprocessing_data == '':
-                preprocessing_data = ''
-            else:
-                preprocessing_data = f"_drop{preprocessing_data}"
-            folder = model[:3]
-            labels.tofile(f'labels/{folder}/{model}{preprocessing_data}_labels.csv', sep=',')
+                    for _ in range(batches):
+                        # Preprocessing
+                        train_data, X_test = preprocessing.preprocessing(**info['preprocessing'])
+                        X_train = train_data.drop('Label',axis=1)
+                        y_train = train_data['Label']
+
+                        (estimator, params, score) = models.grid_search(
+                            X_train, y_train,
+                            info['sk_name'], info['params'],
+                            verbose=False,
+                            n_cores=2,
+                            preprocessing=drop,
+                        ) # this takes time
+
+                        for param in params:
+                            results[model][drop][param] += [params[param]]
+                        results[model][drop]['results'] += [score]
+                        print(".", end="", flush=True)
+                    print()
+
+                    y_test = estimator.predict(X_test)
+                    labels = np.array([int(i) for i in y_test])
+
+                    preprocessing_data = ''.join([str(i) for i in info['preprocessing']['drop']])
+                    if preprocessing_data == '':
+                        preprocessing_data = ''
+                    else:
+                        preprocessing_data = f"_drop{preprocessing_data}"
+                    folder = model[:3]
+                    labels.tofile(f'labels/{folder}/{model}{preprocessing_data}_labels.csv', sep=',')
 
     # data analysis
     print(f"Analysing results from {batches} batches...")

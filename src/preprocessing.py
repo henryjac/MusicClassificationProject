@@ -11,7 +11,7 @@ import sys,os
 sys.path.append('src')
 import models
 
-def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
+def preprocessing(drop=[], keep=[], use_percentage=1, feature_crosses=[]):
     """
     Preprocesses the project_train.csv file by removing irrelevant columns
     and rows.
@@ -22,6 +22,8 @@ def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
     :return: The DataFrame object
     """
     train_file = 'data/project_train.csv'
+    test_file = 'data/project_test.csv'
+    X_test = pd.read_csv(test_file, encoding='utf-8')
     data = pd.read_csv(train_file, encoding='utf-8')
     data = pd.DataFrame(data)
 
@@ -33,6 +35,10 @@ def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
 
     # Use only a random percentage of the data
     data = data.sample(frac=use_percentage)
+
+    if feature_crosses:
+        data = feature_cross(data, *feature_crosses, is_test=False)
+        X_test = feature_cross(X_test, *feature_crosses, is_test=True)
 
     if keep != []:
         if isinstance(keep[0],int):
@@ -49,17 +55,19 @@ def preprocessing(X_test=None, drop=[], keep=[], use_percentage=1):
             X_test = X_test.drop(drop, axis=1)
 
     data = normalize(data) # Use deviation of mean to normalize
-    if X_test is not None:
-        X_test = normalize(X_test)
-        return data, X_test
-    return data
+    X_test = normalize(X_test)
+    return data, X_test
 
 def normalize(dataframe):
     return (dataframe - dataframe.min()) / (dataframe.max() - dataframe.min())
 
-def feature_cross(df, *columns):
+def feature_cross(df, *columns, is_test=False):
+    columns = [df.columns[i] for i in columns]
     new_feature = '_x_'.join(columns)
-    x = [*df.columns[:-1],new_feature,"Label"]
+    if is_test:
+        x = [*df.columns,new_feature]
+    else:
+        x = [*df.columns[:-1],new_feature,"Label"]
     df[new_feature] = df[columns[0]]
     for column in columns[1:]:
         df[new_feature] *= df[column]
